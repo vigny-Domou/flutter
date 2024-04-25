@@ -1,0 +1,101 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_widget/app/utils/validators.dart';
+import 'package:flutter_widget/app/widgets/app_button.dart';
+import 'package:flutter_widget/app/widgets/app_input.dart';
+import 'package:flutter_widget/app/widgets/date_input.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late TextEditingController emailController;
+  late TextEditingController nameController;
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
+  late TextEditingController passwordController;
+  late TextEditingController dateController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    emailController = TextEditingController();
+    nameController = TextEditingController();
+    passwordController = TextEditingController();
+    dateController = TextEditingController();
+  }
+
+  //pour reinitialiser les controlleur
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    emailController.dispose();
+    nameController.dispose();
+    passwordController.dispose();
+    dateController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Flutter Widget"),
+      ),
+      body: SingleChildScrollView(
+        child: Form(
+          key: formkey,
+          autovalidateMode: AutovalidateMode.always,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                AppInput(
+                  controller: nameController,
+                  label: "Nom",
+                  placeholder: "Entrez votre nom",
+                  textInputType: TextInputType.text,
+                  validator: (value) {
+                    if (value == null) {
+                      return "not be null";
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+                AppInput(
+                  controller: emailController,
+                  label: "Email",
+                  textInputType: TextInputType.emailAddress,
+                  validator: (value) => Validators.required("email", value),
+                ),
+                const SizedBox(height: 10),
+                AppInput(
+                  controller: passwordController,
+                  label: "Password",
+                  placeholder: "Votre password",
+                  textInputType: TextInputType.text,
+                  validator: (value) =>
+                      Validators.validatePassword(value, nameController.text),
+                  obscureText: true,
+                ),
+                const SizedBox(height: 10),
+                DateInput(controller: dateController, label: "date de naissance"),
+                const SizedBox(height: 10),
+                AppButton(
+                  title: "Login",
+                  onPressed: () {
+                    setState(() {});
+                  },
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
